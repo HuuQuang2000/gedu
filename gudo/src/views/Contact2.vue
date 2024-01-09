@@ -42,69 +42,68 @@
 </template>
 
 <script setup >
-  import {ref} from "vue";
+import {reactive, ref} from "vue";
 
-  const contact = ref({
+  const contact = reactive({
     email : "",
     phone : "",
     content : "",
     name : "",
   });
 
-  const emailMessage = ref({
+  const emailMessage = reactive({
     notify : "vui long nhap",
     status : false,
   });
-  const phoneMessage = ref({
+  const phoneMessage = reactive({
     notify : "vui long nhap",
     status : false,
   });
-  const contentMessage = ref({
+  const contentMessage = reactive({
     notify : "vui long nhap",
     status : false,
   });
-  const nameMessage = ref({
+  const nameMessage = reactive({
     notify : "vui long nhap",
     status : false,
   });
 
 
   const  handleValueDate = (e) => {
-    if (contact.value.email.length <1 ){
-      emailMessage.value.status = true;
+    if (contact.email.length <1 ){
+      emailMessage.status = true;
     }
-    if (contact.value.name.length <1 ){
-      nameMessage.value.status = true;
+    if (contact.name.length <1 ){
+      nameMessage.status = true;
     }
-    if (contact.value.content.length <1 ){
-      contentMessage.value.status = true;
+    if (contact.content.length <1 ){
+      contentMessage.status = true;
     }
-    if (contact.value.phone.length <1 ){
-      phoneMessage.value.status = true;
+    if (contact.phone.length <1 ){
+      phoneMessage.status = true;
     }
-    if (contact.value.email.length <1 ){
+    if (contact.email.length <1 ){
       alert("vui long kiem tra lai")
       e.preventDefault();
       return;
     }
-    if (contact.value.name.length <1 ){
+    if (contact.name.length <1 ){
       alert("vui long kiem tra lai")
       e.preventDefault();
       return;
     }
-    if (contact.value.content.length <1 ){
+    if (contact.content.length <1 ){
       alert("vui long kiem tra lai")
       e.preventDefault();
       return;
     }
-    if (contact.value.phone.length <1 ){
+    if (contact.phone.length <1 ){
       alert("vui long kiem tra lai")
       e.preventDefault();
       return;
     }
     console.log(contact)
     e.preventDefault();
-
   }
 
   const  handleChange = (object, event) => {

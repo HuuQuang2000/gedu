@@ -204,97 +204,24 @@
     <div style="margin-top: 16px">
       <div  style="margin: 0 auto; width: 70%">
         <div class="row" style="gap: 30px;justify-content: center">
-          <div class="col-3 class">
+          <div class="col-3 class" v-for="(item,index) in data" key="index">
             <div style="width: 100%; height: 280px ">
-              <img src="../assets/images/image_slide.png" style="width: 100%; height: 100%">
+              <img :src="item.image" style="width: 100%; height: 100%">
             </div>
             <div class="class-title">
-              Khóa học sơ cấp
+              {{ item.title }}
             </div>
             <div class="class-introduce gap-x-16">
-              Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...
+              {{ item.detail }}
             </div>
             <div class="class-detail">
-              <div>
-                Xem chi tiet
-              </div>
-              <div>
-                Dang ky
-              </div>
-            </div>
-          </div>
-          <div class="col-3 class" >
-            <div style="width: 100%; height: 280px ">
-              <img src="../assets/images/image_slide.png" style="width: 100%; height: 100%">
-            </div>
-            <div class="class-title">
-              Khóa học sơ cấp
-            </div>
-            <div class="class-introduce gap-x-16">
-              Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...
-            </div>
-            <div class="class-detail">
-              <div>
-                Xem chi tiet
-              </div>
-              <div>
-                Dang ky
-              </div>
-            </div>
-          </div>
-          <div class="col-3 class" >
-            <div style="width: 100%; height: 280px ">
-              <img src="../assets/images/image_slide.png" style="width: 100%; height: 100%">
-            </div>
-            <div class="class-title">
-              Khóa học sơ cấp
-            </div>
-            <div class="class-introduce gap-x-16">
-              Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...
-            </div>
-            <div class="class-detail">
-              <div>
-                Xem chi tiet
-              </div>
-              <div>
-                Dang ky
-              </div>
-            </div>
-          </div>
-          <div class="col-3 class" >
-            <div style="width: 100%; height: 280px ">
-              <img src="../assets/images/image_slide.png" style="width: 100%; height: 100%">
-            </div>
-            <div class="class-title">
-              Khóa học sơ cấp
-            </div>
-            <div class="class-introduce gap-x-16">
-              Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...
-            </div>
-            <div class="class-detail">
-              <div>
-                Xem chi tiet
-              </div>
-              <div>
-                Dang ky
-              </div>
-            </div>
-          </div>
-          <div class="col-3 class" >
-            <div style="width: 100%; height: 280px ">
-              <img src="../assets/images/image_slide.png" style="width: 100%; height: 100%">
-            </div>
-            <div class="class-title">
-              Khóa học sơ cấp
-            </div>
-            <div class="class-introduce gap-x-16">
-              Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...
-            </div>
-            <div class="class-detail">
-              <div>
-                Xem chi tiet
-              </div>
-              <div>
+
+               <div>
+                 <router-link :to="{ name: 'contact1', params: { id: item.id }}" style="text-decoration: none; color: white">
+                 Xem chi tiet
+                 </router-link>
+               </div>
+              <div @click="handleModal(item.id)">
                 Dang ky
               </div>
             </div>
@@ -635,7 +562,54 @@
         </div>
       </div>
     </footer>
+    <div style="width: 100%; height: 100%;display: flex ; position: fixed ; inset: 0; justify-content: center; align-items: center;" v-if="isModal">
+      <div  style="position:absolute; inset: 0; background: gray ; z-index: 10; opacity: 0.9" @click="isModal = !isModal"></div>
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; padding: 16px ;width: 500px; height: 550px; border: 1px solid gray; border-radius: 10px; background: white" class="contact-form">
+        <div @click="isModal = !isModal" style="cursor: pointer; display: flex; justify-content: end">
+          x
+        </div>
+        <form @submit="handleValueDate">
+          <div class="title" style="text-align: center; font-weight: bold; font-size: 32px">
+            Để lại thông tin
+          </div>
+          <div  style="margin-bottom: 16px">
+            <div style="margin-bottom: 4px ; color: #4c4cab">
+              Họ và tên (<span style="color: red">*</span>)
+            </div>
+            <input placeholder="Họ và tên" style="width: 100%; padding: 16px; border-radius: 24px; border: 1px solid gray;box-shadow: 0 1px 3px 0px gray" v-model="contact.name" @input="handleChange(nameMessage,$event)">
+
+            <label v-if="nameMessage.status">{{nameMessage.notify}}</label>
+
+          </div>
+          <div style="margin-bottom: 16px">
+            <div style="margin-bottom: 4px ; color: #4c4cab">
+              Số điện thoai (<span style="color: red">*</span>)
+            </div>
+            <input placeholder="Số điện thoai" style="width: 100%; padding: 16px; border-radius: 24px; border: 1px solid gray;box-shadow: 0 1px 3px 0px gray" v-model="contact.phone" @input="handleChange(phoneMessage,$event)">
+            <label v-if="phoneMessage.status">{{phoneMessage.notify}}</label>
+          </div>
+          <div  style="margin-bottom: 16px">
+            <div style="margin-bottom: 4px ; color: #4c4cab">
+              Email (<span style="color: red">*</span>)
+            </div>
+            <input placeholder="Email" style="width: 100%; padding: 16px; border-radius: 24px; border: 1px solid gray;box-shadow: 0 1px 3px 0px gray" @input="handleChange(emailMessage,$event)" v-model="contact.email">
+            <label v-if="emailMessage.status">{{emailMessage.notify}}</label>
+          </div>
+          <div  style="margin-bottom: 16px">
+            <div style="margin-bottom: 4px ; color: #4c4cab">
+              Nội dung bạn muốn trao đổi (<span style="color: red">*</span>)
+            </div>
+            <textarea style="width: 100%; padding: 16px; border-radius: 4px;" v-model="contact.content"  @input="handleChange(contentMessage,$event)"></textarea>
+            <label v-if="contentMessage.status">{{contentMessage.notify}}</label>
+          </div>
+          <div style="text-align: center">
+            <button class="send-button" type="submit" style="cursor:pointer;padding: 12px 24px; color: #ffffff; background: #4c4cab; border: none; border-radius: 4px">send</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -1090,10 +1064,124 @@ border: 1px solid gray;
 
 <script setup lang="ts">
 import {ref} from "vue";
+import image from "../assets/images/image_slide.png"
+
+
+const isModal = ref(false);
+
+const data = ref([
+    {
+      title: "Khóa học sơ cấp",
+      image: image,
+      detail: "Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...",
+      id :1
+    },
+  {
+    title: "Khóa học sơ cấp",
+    image: image,
+    detail: "Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...",
+    id :2
+  },
+  {
+    title: "Khóa học sơ cấp",
+    image: image,
+    detail: "Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...",
+    id :3
+  },
+  {
+    title: "Khóa học sơ cấp",
+    image: image,
+    detail: "Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...",
+    id :4
+  },
+  {
+    title: "Khóa học sơ cấp",
+    image: image,
+    detail: "Khi tham gia chương trình anh văn giao tiếp học viên sẽ được cung...",
+    id :5
+  },
+
+])
 
 const isShowlangue = ref(false)
 const handleSelect = () => {
   isShowlangue.value = !isShowlangue.value;
+}
+
+const contact = ref({
+  email : "",
+  phone : "",
+  content : "",
+  name : "",
+  id: null,
+});
+
+const emailMessage = ref({
+  notify : "vui long nhap",
+  status : false,
+});
+const phoneMessage = ref({
+  notify : "vui long nhap",
+  status : false,
+});
+const contentMessage = ref({
+  notify : "vui long nhap",
+  status : false,
+});
+const nameMessage = ref({
+  notify : "vui long nhap",
+  status : false,
+});
+
+
+const  handleValueDate = (e) => {
+  if (contact.value.email.length <1 ){
+    emailMessage.value.status = true;
+  }
+  if (contact.value.name.length <1 ){
+    nameMessage.value.status = true;
+  }
+  if (contact.value.content.length <1 ){
+    contentMessage.value.status = true;
+  }
+  if (contact.value.phone.length <1 ){
+    phoneMessage.value.status = true;
+  }
+  if (contact.value.email.length <1 ){
+    alert("vui long kiem tra lai")
+    e.preventDefault();
+    return;
+  }
+  if (contact.value.name.length <1 ){
+    alert("vui long kiem tra lai")
+    e.preventDefault();
+    return;
+  }
+  if (contact.value.content.length <1 ){
+    alert("vui long kiem tra lai")
+    e.preventDefault();
+    return;
+  }
+  if (contact.value.phone.length <1 ){
+    alert("vui long kiem tra lai")
+    e.preventDefault();
+    return;
+  }
+  console.log(contact)
+  e.preventDefault();
+
+}
+
+const  handleChange = (object, event) => {
+  if (event.target.value.length > 0){
+    object.status = false;
+  }else {
+    object.status = true;
+  }
+}
+const handleModal = (id) => {
+  contact.value.id = id;
+  isModal.value = !isModal.value;
 }
 
 
