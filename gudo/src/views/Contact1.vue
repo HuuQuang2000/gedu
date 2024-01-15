@@ -50,7 +50,9 @@
     content : "",
     name : "",
   });
-
+  contact.value = {
+    sss:''
+  };
   const emailMessage = ref({
     notify : "vui long nhap",
     status : false,
