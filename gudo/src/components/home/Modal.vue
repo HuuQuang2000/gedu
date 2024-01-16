@@ -61,7 +61,8 @@ const props = defineProps({
     required : true
   }
 })
-let contact =ref({})
+let contact = props.contact;
+
 const emailMessage = ref({
   notify : "vui long nhap",
   status : false,
@@ -78,6 +79,7 @@ const nameMessage = ref({
   notify : "vui long nhap",
   status : false,
 });
+
 
 
 const  handleValueDate = (e) => {

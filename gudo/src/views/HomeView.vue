@@ -317,10 +317,10 @@ const handleSelect = () => {
 }
 
 const contact = ref({
-  email : "",
-  phone : "",
-  content : "",
-  name : "",
+  email : "coolquanghuu@gmail.com",
+  phone : "0963089510",
+  content : "ga",
+  name : "quang",
   id: null,
 });
 
@@ -340,45 +340,6 @@ const nameMessage = ref({
   notify : "vui long nhap",
   status : false,
 });
-
-
-const  handleValueDate = (e) => {
-  if (contact.value.email.length <1 ){
-    emailMessage.value.status = true;
-  }
-  if (contact.value.name.length <1 ){
-    nameMessage.value.status = true;
-  }
-  if (contact.value.content.length <1 ){
-    contentMessage.value.status = true;
-  }
-  if (contact.value.phone.length <1 ){
-    phoneMessage.value.status = true;
-  }
-  if (contact.value.email.length <1 ){
-    alert("vui long kiem tra lai")
-    e.preventDefault();
-    return;
-  }
-  if (contact.value.name.length <1 ){
-    alert("vui long kiem tra lai")
-    e.preventDefault();
-    return;
-  }
-  if (contact.value.content.length <1 ){
-    alert("vui long kiem tra lai")
-    e.preventDefault();
-    return;
-  }
-  if (contact.value.phone.length <1 ){
-    alert("vui long kiem tra lai")
-    e.preventDefault();
-    return;
-  }
-  console.log(contact)
-  e.preventDefault();
-
-}
 
 const handleGetId = (item : any) =>{
   isModal.value = !isModal.value;
