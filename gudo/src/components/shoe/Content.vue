@@ -48,14 +48,14 @@
           </div>
 
           <div class="option">
-            <div class="color">
+            <div class="color" v-if="bienthe1">
                 <select v-model="color">
                 <option value="default" >chon mau</option>
                 <option v-for="(item,index) in bienthe1 " :key="index" :value="item.giaTri">{{item.giaTri}}</option>
                 </select>
             </div>
             <div class="size">
-              <select v-model="size"  >
+              <select v-model="size" v-if="bienthe2">
                 <option value="default">chon size</option>
                 <option v-for="(item,index) in bienthe2 " :key="index" :value="item.giaTri">{{item.giaTri}}</option>
               </select>
@@ -66,12 +66,13 @@
           </div>
           <div>so luong
             <input type="number" @input="handleSoLuong" v-model="soLuong">
-            <span v-if="(!sizeId || !colorId) && product.tongSp < 1"> sản phẩm đang hết hàng</span>
-            <span v-else-if="(!sizeId || !colorId) && product.tongSp > 1"> {{product.tongSp}} sản phẩm có sẵn</span>
-            <span v-else-if="(sizeId && colorId) && productDto?.soLuong > 1"> {{productDto.soLuong}} sản phẩm có sẵn</span>
+            <span v-if="product.tongSp < 1"> sản phẩm đang hết hàng</span>
+            <span v-else-if="productDto?.soLuong > 1"> {{productDto.soLuong}} sản phẩm có sẵn</span>
+            <span v-else-if="product?.tongSp > 1"> {{product?.tongSp}} sản phẩm có sẵn</span>
             <span v-else> sản phẩm đang hết hàng</span>
           </div>
           <button :disabled="!productDto || productDto?.soLuong < 1 " @click="cartStore.increment">them gio hang</button>
+
           <button>mua ngay</button>
         </div>
       </div>
@@ -95,11 +96,12 @@ let soLuong = ref(1);
 
 const cartStore = useCartStore();
 onMounted(() => {
-  axios.get(`https://shoes.orisu.lol/v1/san-pham/public/4`)
+  axios.get(`https://shoes.orisu.lol/v1/san-pham/public/3`)
       .then(response => {
         product.value = response.data;
         bienthe1.value = response.data.giaTri1List;
         bienthe2.value = response.data.giaTri2List;
+
       })
       .catch(e => {
         console.log(e.message)
@@ -110,23 +112,30 @@ watch(color, (newValue) => {
   let b = [];
   bienthe2.value = product.value.giaTri2List;
   colorId.value = bienthe1.value.find(x => x.giaTri == newValue)?.id
+  console.log(!product.value.giaTri2List)
+  if (!product.value.giaTri2List){
+    productDto = product.value.bienTheDTOS.find(x => x.giatri1 == colorId?.value);
 
-  if (newValue != 'default'){
-    for (let i = 0; i < bienthe2.value.length ; i++) {
-      for (let y = 0; y < bienthe2.value[i].bienThe2.length; y++) {
-        if (bienthe2.value[i].bienThe2[y].giaTri == newValue) {
-          b.push(bienthe2.value[i])
-          break;
+  }else {
+    if (newValue != 'default' && product.value.giaTri1List){
+      for (let i = 0; i < bienthe2.value.length ; i++) {
+        for (let y = 0; y < bienthe2.value[i].bienThe2.length; y++) {
+          if (bienthe2.value[i].bienThe2[y].giaTri == newValue) {
+            b.push(bienthe2.value[i])
+            break;
+          }
         }
       }
+      bienthe2.value = b;
+    }else {
+      bienthe1.value = product.value.giaTri1List;
+      bienthe2.value = product.value.giaTri2List;
+      size.value="default"
+
     }
-    bienthe2.value = b;
-  }else {
-    bienthe1.value = product.value.giaTri1List;
-    bienthe2.value = product.value.giaTri2List;
-    size.value="default"
+    productDto = product.value.bienTheDTOS.find(x => x.giatri1 == colorId?.value && x.giatri2== sizeId?.value);
+    console.log(sizeId?.value,colorId?.value)
   }
-  productDto = product.value.bienTheDTOS.find(x => x.giaTri1 == colorId?.value && x.giaTri2== sizeId?.value);
   soLuong.value = 1;
 })
 
@@ -143,23 +152,30 @@ const handleSoLuong = (event) => {
 watch(size, (newValue) => {
   let b = [];
   bienthe1.value = product.value.giaTri1List;
+
   sizeId.value = bienthe2.value.find(x => x.giaTri == newValue)?.id
-  if (newValue != 'default'){
-    for (let i = 0; i < bienthe1.value.length ; i++) {
-      for (let y = 0; y < bienthe1.value[i].bienThe2.length; y++) {
-        if (bienthe1.value[i].bienThe2[y].giaTri == newValue) {
-          b.push(bienthe1.value[i])
-          break;
+  if (!product.value.giaTri1List){
+    productDto = product.value.bienTheDTOS.find(x => x.giatri2 == sizeId?.value);
+
+  }else {
+    if (newValue != 'default' && product.value.giaTri1List){
+
+      for (let i = 0; i < bienthe1.value.length ; i++) {
+        for (let y = 0; y < bienthe1.value[i].bienThe2.length; y++) {
+          if (bienthe1.value[i].bienThe2[y].giaTri == newValue) {
+            b.push(bienthe1.value[i])
+            break;
+          }
         }
       }
+      bienthe1.value = b;
+    }else {
+      bienthe1.value = product.value.giaTri1List;
+      bienthe2.value = product.value.giaTri2List;
+      color.value="default"
     }
-    bienthe1.value = b;
-  }else {
-    bienthe1.value = product.value.giaTri1List;
-    bienthe2.value = product.value.giaTri2List;
-    color.value="default"
+    productDto = product.value.bienTheDTOS.find(x => (x.giatri1 == colorId?.value && x.giatri2== sizeId?.value));
   }
-  productDto = product.value.bienTheDTOS.find(x => (x.giatri1 == colorId?.value && x.giatri2== sizeId?.value));
   soLuong.value = 1;
 })
 
