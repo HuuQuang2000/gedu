@@ -71,7 +71,7 @@
             <span v-else-if="product?.tongSp > 1"> {{product?.tongSp}} sản phẩm có sẵn</span>
             <span v-else> sản phẩm đang hết hàng</span>
           </div>
-          <button :disabled="!productDto || productDto?.soLuong < 1 " @click="cartStore.increment">them gio hang</button>
+          <button :disabled="!productDto || productDto?.soLuong < 1 " @click="handAddCart">them gio hang</button>
 
           <button>mua ngay</button>
         </div>
@@ -84,6 +84,11 @@
 import axios from "axios";
 import {onMounted, ref, watch} from "vue";
 import {useCartStore} from "@/stores/cart";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
+let id = route.params.id;
+
 let product = ref();
 let productDto = ref();
 let bienthe1 = ref();
@@ -94,9 +99,11 @@ let colorId = ref();
 let sizeId = ref();
 let soLuong = ref(1);
 
+
 const cartStore = useCartStore();
+
 onMounted(() => {
-  axios.get(`https://shoes.orisu.lol/v1/san-pham/public/3`)
+  axios.get(`https://shoes.orisu.lol/v1/san-pham/public/`+id)
       .then(response => {
         product.value = response.data;
         bienthe1.value = response.data.giaTri1List;
@@ -109,10 +116,10 @@ onMounted(() => {
 
 })
 watch(color, (newValue) => {
+
   let b = [];
   bienthe2.value = product.value.giaTri2List;
   colorId.value = bienthe1.value.find(x => x.giaTri == newValue)?.id
-  console.log(!product.value.giaTri2List)
   if (!product.value.giaTri2List){
     productDto = product.value.bienTheDTOS.find(x => x.giatri1 == colorId?.value);
 
@@ -133,8 +140,7 @@ watch(color, (newValue) => {
       size.value="default"
 
     }
-    productDto = product.value.bienTheDTOS.find(x => x.giatri1 == colorId?.value && x.giatri2== sizeId?.value);
-    console.log(sizeId?.value,colorId?.value)
+    productDto = product.value.bienTheDTOS.find(x => x?.giatri1 == colorId?.value && x?.giatri2== sizeId?.value);
   }
   soLuong.value = 1;
 })
@@ -178,6 +184,11 @@ watch(size, (newValue) => {
   }
   soLuong.value = 1;
 })
+
+const handAddCart =() =>{
+  cartStore.check(productDto,soLuong.value);
+  console.log(cartStore.list)
+}
 
 </script>
 
